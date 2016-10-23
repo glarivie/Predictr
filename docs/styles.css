@@ -1,0 +1,96 @@
+/* CSS Mini Reset */
+
+html, body, div, form, fieldset, legend, label {
+  margin: 0;
+  padding: 0;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th, td {
+  text-align: left;
+  vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
+
+img { border: 0; }
+
+
+/* ------------------------------------------ */
+
+body {
+  background-color: #343434;
+  color: #FFF;
+  font-family: sans-serif;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+small {
+  color: #999;
+  font-size: 12px;
+  text-align: center;
+}
+
+input.test {
+  margin: 18px 0 5px 0;
+  outline: none;
+  font-size: 14px;
+  background-color: #444;
+  padding: 5px 10px;
+  border: 1px solid #FFF;
+  color: #FFF;
+  width: 235px;
+  border-radius: 2px;
+}
+
+.predictr {
+  position: absolute;
+  visibility: hidden;
+  background: #CCC;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  border-radius: 4px;
+  padding: 1px;
+}
+
+.predictr:after {
+    content: "";
+    /*display: inline-block;*/
+    position: absolute;
+    top: 100%;
+    left: 44%;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 5px 5px 0 5px;
+    border-color: #CCC transparent transparent transparent;
+}
+
+.predictr .item {
+  color: #555;
+  font-size: 13px;
+  text-align: center;
+  padding: 5px 10px;
+  border-right: 1px solid #555;
+}
+
+.predictr .item:hover {
+  background-color: rgba(0, 0, 0, .1);
+  cursor: pointer;
+}
+
+.predictr .item:last-of-type {
+  border-right: none;
+}
