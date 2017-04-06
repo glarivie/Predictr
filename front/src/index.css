@@ -1,0 +1,168 @@
+@import 'https://fonts.googleapis.com/css?family=Roboto:100,300,300i,400,400i,500,700,900';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: 'Roboto', sans-serif;
+  color: white;
+  background-color: #333;
+}
+
+textarea::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #444;
+}
+
+textarea::-moz-placeholder { /* Firefox 19+ */
+  color: #444;
+}
+
+textarea:-ms-input-placeholder { /* IE 10+ */
+  color: #444;
+}
+
+textarea:-moz-placeholder { /* Firefox 18- */
+  color: #444;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+
+.app footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  color: rgba(255, 255, 255, .2);
+  font-size: 12px;
+  margin-top: 21px;
+}
+
+.app .title {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, .6);
+}
+
+.app .title .icon {
+  font-size: 28px;
+  margin-right: 8px;
+}
+
+.app .title h1 {
+  font-weight: 300;
+}
+
+.app .predictr {
+  width: 42%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 4px;
+}
+
+.app .predictr .suggestions {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: space-around;
+  background-color: rgba(255, 255, 255, .1);
+  border-bottom: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 4px 4px 0 0;
+}
+
+.app .predictr .suggestions .single {
+  flex-basis: calc(100% / 3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  padding: 8px 0;
+  border-right: 1px solid rgba(255, 255, 255, .2);
+}
+
+.app .predictr .suggestions .single:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, .05);
+  font-weight: 500;
+}
+
+.app .predictr .suggestions .single:last-of-type {
+  border-right: none;
+}
+
+.app .predictr .suggestions .single .word {
+  font-size: 17px;
+  color: #AAA;
+  margin-bottom: 5px;
+  /*text-transform: capitalize;*/
+}
+
+.app .predictr .suggestions .single .ctrl {
+  font-size: 10px;
+  color: #777;
+}
+
+.app .predictr .textarea {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  position: relative;
+}
+
+.app .predictr .textarea textarea {
+  border-radius: 0 0 4px 4px;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  background-color: #222;
+  color: #AAA;
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 17px;
+  padding: 15px 18px;
+}
+
+.app .predictr .textarea .trash {
+  position: absolute;
+  right: 15px;
+  bottom: 15px;
+  background-color: rgba(255, 255, 255, .1);
+  border: 1px solid rgba(255, 255, 255, .2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  color: #AAA;
+}
+
+.app .predictr .textarea .trash:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, .15);
+  color: #BBB;
+}
