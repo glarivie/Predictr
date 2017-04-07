@@ -3,7 +3,19 @@
 #    ---> 2 gram { 'w': 3-gram, '_n': nb_trigram, '_p': proba }
 #            ---> 3 gram { '_p': proba }
 
+# from flask import Flask
+import json
+
+# app = Flask(__name__)
+
 class markov():
+    """ markov is the class engine for word prediction.
+
+    Attribute:
+        ngrams: tree of the ngrams
+        deep: the depth of the tree
+    """
+
     def __init__(self, deep = 0):
          self.ngrams = { '_n': 0 } # contient les trigrams
          self.deep = deep
@@ -43,16 +55,25 @@ class markov():
         base = self.__iterate(self.ngrams, sentence, i, self.deep - 1)
         print(base)
         base = base[sentence[i]]
+        tuple_proba = lambda x: (x, base[x]['_p'])
+        res = sorted(map(tuple_proba, base.keys() ^ {'_p', '_n'}), key = lambda x: x[1], reverse = True)
+        return res[:5]
         for x in base:
             if x not in ['_p', '_n'] and base[x]['_p'] > res[1]:
                 res = (x, base[x]['_p'])
-        return res[0]
+        return res[:5]
 
     def show(self):
         print(self.ngrams)
 
+# @app.route('/')
+# def preditr():
+#     markov = predictr.__markov
+
+
 if __name__ == '__main__':
     IA = markov(2)
+#    predictr.__markov = IA
     while True:
         line = input().strip()
         if line.strip() == 'exit':
