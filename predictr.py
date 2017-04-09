@@ -124,10 +124,9 @@ class Markov():
         token_sentences = self.__tokenize(text)
         token_sentence = token_sentences[-1]
         base = self.__find_gram(token_sentence)
-        print(base)
         tuple_proba = lambda x: (x, base[x]['_p'])
-        res = sorted(map(tuple_proba, base.keys() ^ {'_p', '_n'}), key = lambda x: x[1], reverse = True)
-        return json.dumps([ word for word, proba in res[:3] ])
+        res = sorted(map(tuple_proba, base.keys() - {'_n', '_p'}), key = lambda x: x[1], reverse = True)
+        return [ word for word, proba in res[:3] ]
 
 
 @app.route('/learn', methods = ['POST'])
