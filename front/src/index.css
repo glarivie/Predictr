@@ -145,10 +145,8 @@ textarea:-moz-placeholder { /* Firefox 18- */
   padding: 15px 18px;
 }
 
-.app .predictr .textarea .trash {
+.app .predictr .textarea .trash, .app .predictr .textarea .train {
   position: absolute;
-  right: 15px;
-  bottom: 15px;
   background-color: rgba(255, 255, 255, .1);
   border: 1px solid rgba(255, 255, 255, .2);
   border-radius: 50%;
@@ -161,8 +159,24 @@ textarea:-moz-placeholder { /* Firefox 18- */
   color: #AAA;
 }
 
+.app .predictr .textarea .trash {
+  right: 15px;
+  bottom: 15px;
+}
+
+.app .predictr .textarea .train {
+  right: 68px;
+  bottom: 15px;
+}
+
 .app .predictr .textarea .trash:hover {
   cursor: pointer;
-  background-color: rgba(255, 255, 255, .15);
+  background-color: rgba(255, 0, 0, .15);
+  color: #BBB;
+}
+
+.app .predictr .textarea .train:hover {
+  cursor: pointer;
+  background-color: rgba(0, 255, 0, .15);
   color: #BBB;
 }

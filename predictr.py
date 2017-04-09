@@ -106,6 +106,7 @@ class Markov():
 
 @app.route('/learn', methods = ['POST'])
 def learn():
+    print('form:', request.form)
     IA = learn.IA
     text = request.form['body']
     IA.learn(text)

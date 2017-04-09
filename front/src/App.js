@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+import actions from './actions'
+
 class App extends Component {
   state = {
     value: '',
@@ -20,12 +22,10 @@ class App extends Component {
      keys: {
        ...this.state.keys,
        [keyCode]: type === 'keydown',
-     }
+     },
    })
 
    const { keys, value, suggests } = this.state
-
-   console.log('handleKeyPress', type, keyCode, keys, value)
 
    if (keys['17'] && keys['49'] && value) {
      this.replaceLastWord(suggests[0])
@@ -36,7 +36,17 @@ class App extends Component {
    }
   }
 
-  handleChange = value => this.setState({ value })
+  handleChange = value => {
+    this.setState({ value })
+    // actions.learn(value)
+  }
+
+  learn = () => {
+    const { value } = this.state
+
+    actions.learn(value)
+    this.handleChange('')
+  }
 
   handleFocus = ({ type }) =>
     this.setState({ placeholder: type === 'focus' ? '' : 'Type you text here...' })
@@ -74,6 +84,9 @@ class App extends Component {
               onKeyUp={this.handleKeyPress}
               rows={8}
             />
+            <div className="train" onClick={this.learn}>
+              <i className="ion-erlenmeyer-flask" />
+            </div>
             <div className="trash" onClick={() => this.handleChange('')}>
               <i className="ion-trash-a" />
             </div>
