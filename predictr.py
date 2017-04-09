@@ -150,8 +150,6 @@ def predict():
     IA = predict.IA
     print(request.args)
     text = request.args.get('body')
-    if not text:
-        return '', 418
     res = IA.predict(text)
     return json.dumps(res), 200
 

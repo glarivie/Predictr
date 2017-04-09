@@ -11,17 +11,20 @@ const learn = async value => {
   try {
     const { status } = await request.post('/learn', stringify({ body: value }))
 
-    console.log('ACTIONS LEARN STATUS =>', status)
+    if (status !== 200) { throw new Error('[ERROR] Cannot learn') }
   } catch (err) {
-    console.error('[ERROR] Cannot learn', err)
+    console.error(err)
   }
 }
 
-const predict = async () => {
+const predict = async value => {
   try {
-    const { status, data } = await request.get('/predict')
+    if (!value.length) { return }
 
-    console.log('ACTIONS PREDICT', status, data)
+    const { status, data } = await request.get(`/predict?body=${value}`)
+
+    if (status !== 200) { return [] }
+    return data
   } catch (err) {
     console.error('[ERROR] Cannot predict', err)
   }

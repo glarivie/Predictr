@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { debounce } from 'lodash'
 
 import actions from './actions'
 
@@ -7,15 +8,16 @@ class App extends Component {
     value: '',
     placeholder: 'Type you text here...',
     keys: {},
-    suggests: ['élephant', 'bonjour', 'aujourd\'hui'],
+    suggests: [],
   }
 
   replaceLastWord = word => {
-    let splittedValue = this.state.value.split(' ')
-    splittedValue[splittedValue.length - 1] = word
+    const { value } = this.state
+    let splittedValue = value.split(' ')
 
-    this.setState({ value: splittedValue.join(' ') })
-  };
+    splittedValue[splittedValue.length - 1] = word
+    this.setState({ value: `${splittedValue.join(' ')} ` })
+  }
 
   handleKeyPress = async ({ keyCode, type }) => {
    await this.setState({
@@ -36,15 +38,18 @@ class App extends Component {
    }
   }
 
-  handleChange = value => {
-    this.setState({ value })
-    // actions.learn(value)
+  predict = debounce(async () =>
+    this.setState({ suggests: await actions.predict(this.state.value) })
+  , 500)
+
+  handleChange = async value => {
+    await this.setState({ value })
+
+    if (!!value.length) { this.predict() }
   }
 
-  learn = () => {
-    const { value } = this.state
-
-    actions.learn(value)
+  learn = async value => {
+    await actions.learn(value)
     this.handleChange('')
   }
 
@@ -52,7 +57,10 @@ class App extends Component {
     this.setState({ placeholder: type === 'focus' ? '' : 'Type you text here...' })
 
   render() {
-    const { value, placeholder, suggests } = this.state
+    const { value, placeholder, suggests = [] } = this.state
+
+    console.log('VALUE', value)
+    console.log('SUGGESTS', suggests)
 
     return (
       <div className="app">
@@ -84,7 +92,7 @@ class App extends Component {
               onKeyUp={this.handleKeyPress}
               rows={8}
             />
-            <div className="train" onClick={this.learn}>
+            <div className="train" onClick={() => this.learn(value)}>
               <i className="ion-erlenmeyer-flask" />
             </div>
             <div className="trash" onClick={() => this.handleChange('')}>
