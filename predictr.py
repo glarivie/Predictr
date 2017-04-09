@@ -83,11 +83,11 @@ class Markov():
     def __find_gram(self, tokens: List[str]):
         """ Find the gram.
         """
-        tokens = tokens[:-self.deep]
+        tokens = tokens[-self.deep:]
         base = self.ngrams
         for index, token in enumerate(tokens):
             if token not in base.keys():
-                return self.__find_gram(tokens[index:])
+                return self.__find_gram(tokens[index + 1:])
             base = base[token]
         return base
 
@@ -98,7 +98,7 @@ class Markov():
         Args:
             tokens: list of token to train
         """
-        tokens = tokens[:-self.deep]
+        tokens = tokens[-self.deep:]
         base = self.ngrams
         for token in tokens:
             self.__update_gram(base, token)
@@ -114,11 +114,16 @@ class Markov():
         for token_sentence in token_sentences:
             self.__learn_sentence(token_sentence)
             print(token_sentence)
+        print(self.ngrams)
 
     def predict(self, text: str):
         token_sentences = self.__tokenize(text)
+        print(token_sentences)
         token_sentence = token_sentences[-1]
+        print(token_sentence)
         base = self.__find_gram(token_sentence)
+        print(json.dumps(base))
+        return list(base.keys() ^ {'_p', '_n'})
         tuple_proba = lambda x: (x, base[x]['_p'])
         res = sorted(map(tuple_proba, base.keys() ^ {'_p', '_n'}), key = lambda x: x[1], reverse = True)
 
@@ -135,6 +140,7 @@ def learn():
 @app.route('/predict', methods = ['GET'])
 def predict():
     IA = predict.IA
+    print(request.args)
     text = request.args.get('body')
     if not text:
         return '', 418
