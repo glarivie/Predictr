@@ -65,7 +65,7 @@ class Markov():
                 word = word[1:]
             if word.endswith(ponctuation):
                 word = word[:-1]
-        return word
+        return word.lower()
 
     def __tokenize(self, text: str) -> List[str]:
         """ Tokenize the corpus.
@@ -125,14 +125,15 @@ class Markov():
         print(self.ngrams)
 
     def predict(self, text: str):
+        word = ''
+        if text[-1].isalpha():
+            text, word = text.rsplit(' ', 1)
         token_sentences = self.__tokenize(text)
         token_sentence = token_sentences[-1]
         base = self.__find_gram(token_sentence)
-        print(token_sentence[-1])
-        print(base)
         tuple_proba = lambda x: (x, base[x]['_p'])
         res = sorted(map(tuple_proba, base.keys() - {'_n', '_p'}), key = lambda x: x[1], reverse = True)
-        return [ word for word, proba in res[:3] ]
+        return [ word for word, proba in res if word.startswith(word) ]
 
 
 @app.route('/learn', methods = ['POST'])
