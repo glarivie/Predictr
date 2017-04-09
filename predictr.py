@@ -1,45 +1,119 @@
-class markov():
-    def __init__(self):
-        self.ngrams = dict()
+from typing import Union, Dict, List, Any
+from flask import Flask, request
+import json
+import sys
+import re
+import os
 
-    def __update_grams(self, key, word):
-        n = self.ngrams[key]['_n']
-        if word not in self.ngrams[key]:
-            self.ngrams[key][word] = 0
-        for x in self.ngrams[key]:
-            tmp = self.ngrams[key][x]
-            self.ngrams[key][x] = (tmp * n + (1 if x == word else 0)) / (n + 1)
-        self.ngrams[key]['_n'] = n + 1
+app = Flask(__name__)
 
-    def learn(self, s):
-        sentence = s.split(' ')
-        for i in range(len(sentence) - 1):
-            if sentence[i] in self.ngrams:
-                self.__update_grams(sentence[i], sentence[i + 1])
-            else:
-                self.ngrams[sentence[i]] = {sentence[i + 1]: 1, '_n': 1}
+def foreach(fn, elems: Any):
+    for elem in elems:
+        fn(elem)
 
-    def predict(self, w):
-        res = ('', 0)
-        if w not in self.ngrams:
-            return ''
-        for x in self.ngrams[w]:
-            if self.ngrams[w][x] > res[1] and x != '_n':
-                res = (x, self.ngrams[w][x])
-        return res[0]
+def exists(item: Any):
+    return item
 
-    def show(self):
-        print(self.ngrams)
+Ngram = int #Dict[str, Union[str, float, Dict[str, Union[str, float]]]]
+
+class Markov():
+    """ markov is the class engine for word prediction.
+
+    the ngrams are stored in hashmap in wich we can navigate in order
+    to predict the next word. The two main purpose of this class is to finish
+    the current word with the 3 highest likely words and predict the next word.
+
+    Attribute:
+        ngrams: tree of the ngrams
+        deep: the depth of the tree
+    """
+
+    def __init__(self, deep = 0):
+        """ Constructor """
+        self.ngrams = { '_n': 0 }
+        self.deep = deep
+
+    def __update_gram(self, base: Ngram, word: str):
+        """ Update the gram.
+
+        Args:
+            base: the reference to the subtree to update
+            word: the word to learn
+        """
+        n = base['_n']
+        if word not in base:
+            base[word] = { '_p': 0, '_n': 0 }
+        # __update change the probabilty for all the words with inc the good word then normalize
+        def __update(x): base[x]['_p'] = (base[x]['_p'] * n + (1 if x == word else 0)) / (n + 1)
+        foreach(__update, base.keys() - {'_p', '_n'})
+        base['_n'] += 1
+
+    def __clean(self, word: str) -> str:
+        """ Clean a word from ponctuation.
+
+        Args:
+            word: the word to treat
+
+        Returns:
+            the cleanned word
+        """
+        ponctuations = {',', '.', ':', ';'}
+        for ponctuation in ponctuations:
+            if word.startswith(ponctuation):
+                word = word[1:]
+            if word.endswith(ponctuation):
+                word = word[:-1]
+        return word
+
+    def __tokenize(self, text: str) -> List[str]:
+        """ Tokenize the corpus.
+
+        Args:
+            text: the corpus to tokenize.
+
+        Returns:
+            tokenized corpus.
+        """
+        sentences = re.split('\. |: |; ', text.replace('\n', ' '))
+        tokens = [ list(filter(exists, map(self.__clean, sentence.split(' ')))) for sentence in sentences ]
+        return list(filter(exists, tokens))
+
+    def __learn_sentence(self, tokens: List[str]):
+        """ Learn a full token sentence.
+
+        Args:
+            tokens: list of token to train
+        """
+        tokens = tokens[:-self.deep]
+        base = self.ngrams
+        for token in tokens:
+            self.__update_gram(base, token)
+            base = base[token]
+
+    def learn(self, text: str):
+        """ Learn the text corpus.
+
+        Args:
+            text: the learning corpus
+        """
+        token_sentences = self.__tokenize(text)
+        for token_sentence in token_sentences:
+            self.__learn_sentence(token_sentence)
+            print(token_sentence)
+
+
+@app.route('/learn', methods = ['POST'])
+def learn():
+    IA = learn.IA
+    text = request.form['body']
+    IA.learn(text)
+    return '', 200
+
 
 if __name__ == '__main__':
-    IA = markov()
-    while True:
-        line = input()
-        if line.strip() == 'exit':
-            print('done')
-            exit()
-        if line.strip() == 'show':
-            print(IA.show())
-            continue
-        IA.learn(line.strip())
-        print(IA.predict(line.strip().split(' ')[-1]))
+    IA = Markov(3)
+    learn.IA = IA
+    app.run('0.0.0.0', 5000)
+    exit(os.EX_OK)
+    with open(sys.argv[1]) as f:
+        IA.learn(f.read())
