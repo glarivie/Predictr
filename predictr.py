@@ -122,14 +122,12 @@ class Markov():
 
     def predict(self, text: str):
         token_sentences = self.__tokenize(text)
-        print(token_sentences)
         token_sentence = token_sentences[-1]
-        print(token_sentence)
         base = self.__find_gram(token_sentence)
-        print(json.dumps(base))
-        return list(base.keys() ^ {'_p', '_n'})
+        print(base)
         tuple_proba = lambda x: (x, base[x]['_p'])
         res = sorted(map(tuple_proba, base.keys() ^ {'_p', '_n'}), key = lambda x: x[1], reverse = True)
+        return json.dumps([ word for word, proba in res[:3] ])
 
 
 @app.route('/learn', methods = ['POST'])
