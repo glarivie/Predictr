@@ -1,4 +1,5 @@
 from typing import Union, Dict, List, Any
+from flask_cors import CORS, cross_origin
 from flask import Flask, request
 import json
 import sys
@@ -6,6 +7,7 @@ import re
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 def foreach(fn, elems: Any):
     for elem in elems:
