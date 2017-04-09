@@ -83,7 +83,8 @@ class Markov():
     def __find_gram(self, tokens: List[str]):
         """ Find the gram.
         """
-        tokens = tokens[-self.deep:]
+        tokens = tokens[-(self.deep - 1):]
+        print(tokens)
         base = self.ngrams
         for index, token in enumerate(tokens):
             if token not in base.keys():
@@ -101,11 +102,14 @@ class Markov():
         for up in range(1, self.deep + 1):
             for index in range(len(tokens) - up + 1):
                 tmp_tokens = tokens[index:index + up]
+                print(tmp_tokens)
                 if not tmp_tokens:
                     continue
                 base = self.ngrams
-                for token in tmp_tokens[:-2]:
+                for token in tmp_tokens[:-1]:
+                    print('skip:', token)
                     base = base[token]
+                print('up:', tmp_tokens[-1])
                 self.__update_gram(base, tmp_tokens[-1])
 
     def learn(self, text: str):
@@ -124,6 +128,8 @@ class Markov():
         token_sentences = self.__tokenize(text)
         token_sentence = token_sentences[-1]
         base = self.__find_gram(token_sentence)
+        print(token_sentence[-1])
+        print(base)
         tuple_proba = lambda x: (x, base[x]['_p'])
         res = sorted(map(tuple_proba, base.keys() - {'_n', '_p'}), key = lambda x: x[1], reverse = True)
         return [ word for word, proba in res[:3] ]
