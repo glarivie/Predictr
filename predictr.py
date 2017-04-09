@@ -80,6 +80,18 @@ class Markov():
         tokens = [ list(filter(exists, map(self.__clean, sentence.split(' ')))) for sentence in sentences ]
         return list(filter(exists, tokens))
 
+    def __find_gram(self, tokens: List[str]):
+        """ Find the gram.
+        """
+        tokens = tokens[:-self.deep]
+        base = self.ngrams
+        for index, token in enumerate(tokens):
+            if token not in base.keys():
+                return self.__find_gram(tokens[index:])
+            base = base[token]
+        return base
+
+
     def __learn_sentence(self, tokens: List[str]):
         """ Learn a full token sentence.
 
@@ -103,6 +115,13 @@ class Markov():
             self.__learn_sentence(token_sentence)
             print(token_sentence)
 
+    def predict(self, text: str):
+        token_sentences = self.__tokenize(text)
+        token_sentence = token_sentences[-1]
+        base = self.__find_gram(token_sentence)
+        tuple_proba = lambda x: (x, base[x]['_p'])
+        res = sorted(map(tuple_proba, base.keys() ^ {'_p', '_n'}), key = lambda x: x[1], reverse = True)
+
 
 @app.route('/learn', methods = ['POST'])
 def learn():
@@ -112,9 +131,20 @@ def learn():
     return '', 200
 
 
+@app.route('/predict', methods = ['GET'])
+def predict():
+    IA = predict.IA
+    text = request.args.get('body')
+    if not text:
+        return '', 418
+    res = IA.predict(text)
+    return json.dumps(res), 200
+
+
 if __name__ == '__main__':
     IA = Markov(3)
     learn.IA = IA
+    predict.IA = IA
     app.run('0.0.0.0', 5000)
     exit(os.EX_OK)
     with open(sys.argv[1]) as f:
