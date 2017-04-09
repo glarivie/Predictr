@@ -98,11 +98,15 @@ class Markov():
         Args:
             tokens: list of token to train
         """
-        tokens = tokens[-self.deep:]
-        base = self.ngrams
-        for token in tokens:
-            self.__update_gram(base, token)
-            base = base[token]
+        for up in range(1, self.deep + 1):
+            for index in range(len(tokens) - up + 1):
+                tmp_tokens = tokens[index:index + up]
+                if not tmp_tokens:
+                    continue
+                base = self.ngrams
+                for token in tmp_tokens[:-2]:
+                    base = base[token]
+                self.__update_gram(base, tmp_tokens[-1])
 
     def learn(self, text: str):
         """ Learn the text corpus.
