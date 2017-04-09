@@ -152,9 +152,10 @@ def predict():
 
 if __name__ == '__main__':
     IA = Markov(3)
+    if len(sys.argv) > 2:
+        with open(sys.argv[1]) as f:
+            IA.learn(f.read())
     learn.IA = IA
     predict.IA = IA
     app.run('0.0.0.0', 5000)
     exit(os.EX_OK)
-    with open(sys.argv[1]) as f:
-        IA.learn(f.read())
