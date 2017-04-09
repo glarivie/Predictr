@@ -80,6 +80,7 @@ textarea:-moz-placeholder { /* Firefox 18- */
 
 .app .predictr .suggestions {
   width: 100%;
+  min-height: 53px;
   display: flex;
   align-items: center;
   align-content: center;
