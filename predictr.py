@@ -90,7 +90,9 @@ class Markov():
             if token not in base.keys():
                 return self.__find_gram(tokens[index + 1:])
             base = base[token]
-        return base
+        if base.keys() - {'_p', '_n'}:
+            return base
+        return self.ngrams
 
 
     def __learn_sentence(self, tokens: List[str]):
@@ -127,7 +129,8 @@ class Markov():
             current_word = text.rstrip()
         else:
             current_word = ''
-        print(text, current_word)
+        print('text:', text)
+        print('current_word:', current_word)
         token_sentences = self.__tokenize(text)
         token_sentence = token_sentences[-1]
         base = self.__find_gram(token_sentence)
