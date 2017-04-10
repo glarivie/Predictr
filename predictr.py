@@ -76,7 +76,7 @@ class Markov():
         Returns:
             tokenized corpus.
         """
-        sentences = re.split('\. |: |; ', text.replace('\n', ' '))
+        sentences = re.split('\. |: |; ', text.replace('\n', ' ').replace('\t', ' '))
         tokens = [ list(filter(exists, map(self.__clean, sentence.split(' ')))) for sentence in sentences ]
         return list(filter(exists, tokens))
 
@@ -102,14 +102,11 @@ class Markov():
         for up in range(1, self.deep + 1):
             for index in range(len(tokens) - up + 1):
                 tmp_tokens = tokens[index:index + up]
-                print(tmp_tokens)
                 if not tmp_tokens:
                     continue
                 base = self.ngrams
                 for token in tmp_tokens[:-1]:
-                    print('skip:', token)
                     base = base[token]
-                print('up:', tmp_tokens[-1])
                 self.__update_gram(base, tmp_tokens[-1])
 
     def learn(self, text: str):
@@ -122,18 +119,23 @@ class Markov():
         for token_sentence in token_sentences:
             self.__learn_sentence(token_sentence)
             print(token_sentence)
-        print(self.ngrams)
 
     def predict(self, text: str):
-        word = ''
-        if text[-1].isalpha():
-            text, word = text.rsplit(' ', 1)
+        if text[-1].isalpha() and ' ' in text[:-1]:
+            text, current_word = text.rsplit(' ', 1) 
+        elif text[-1].isalpha():
+            current_word = text.rstrip()
+        else:
+            current_word = ''
+        print(text, current_word)
         token_sentences = self.__tokenize(text)
         token_sentence = token_sentences[-1]
         base = self.__find_gram(token_sentence)
         tuple_proba = lambda x: (x, base[x]['_p'])
         res = sorted(map(tuple_proba, base.keys() - {'_n', '_p'}), key = lambda x: x[1], reverse = True)
-        return [ word for word, proba in res if word.startswith(word) ]
+        res = [ word for word, proba in res if not current_word or word.startswith(current_word) ]
+        print('res:', res)
+        return res[:3]
 
 
 @app.route('/learn', methods = ['POST'])
@@ -156,8 +158,9 @@ def predict():
 
 if __name__ == '__main__':
     IA = Markov(3)
-    if len(sys.argv) > 2:
+    if len(sys.argv) > 1:
         with open(sys.argv[1]) as f:
+            print('learn from file')
             IA.learn(f.read())
     learn.IA = IA
     predict.IA = IA

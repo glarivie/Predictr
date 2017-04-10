@@ -21,7 +21,8 @@ const predict = async value => {
   try {
     if (!value.length) { return }
 
-    const { status, data } = await request.get(`/predict?body=${value}`)
+    const req = '/predict?' + stringify({ body: value })
+    const { status, data } = await request.get(req)
 
     if (status !== 200) { return [] }
     return data

@@ -1,0 +1,45 @@
+FTP has had a long evolution over the years.  Appendix III is a
+chronological compilation of Request for Comments documents
+relating to FTP.  These include the first proposed file transfer
+mechanisms in 1971 that were developed for implementation on hosts
+at M.I.T. (RFC 114), plus comments and discussion in RFC 141.
+
+RFC 172 provided a user-level oriented protocol for file transfer
+between host computers (including terminal IMPs).  A revision of
+this as RFC 265, restated FTP for additional review, while RFC 281
+suggested further changes.  The use of a "Set Data Type"
+transaction was proposed in RFC 294 in January 1982.
+
+RFC 354 obsoleted RFCs 264 and 265.  The File Transfer Protocol
+was now defined as a protocol for file transfer between HOSTs on
+the ARPANET, with the primary function of FTP defined as
+transfering files efficiently and reliably among hosts and
+allowing the convenient use of remote file storage capabilities.
+RFC 385 further commented on errors, emphasis points, and
+additions to the protocol, while RFC 414 provided a status report
+on the working server and user FTPs.  RFC 430, issued in 1973,
+(among other RFCs too numerous to mention) presented further
+comments on FTP.  Finally, an "official" FTP document was
+published as RFC 454.
+
+By July 1973, considerable changes from the last versions of FTP
+were made, but the general structure remained the same.  RFC 542
+was published as a new "official" specification to reflect these
+changes.  However, many implementations based on the older
+specification were not updated.
+
+In 1974, RFCs 607 and 614 continued comments on FTP.  RFC 624
+proposed further design changes and minor modifications.  In 1975,
+RFC 686 entitled, "Leaving Well Enough Alone", discussed the
+differences between all of the early and later versions of FTP.
+RFC 691 presented a minor revision of RFC 686, regarding the
+subject of print files.
+
+Motivated by the transition from the NCP to the TCP as the
+underlying protocol, a phoenix was born out of all of the above
+efforts in RFC 765 as the specification of FTP for use on TCP.
+
+This current edition of the FTP specification is intended to
+correct some minor documentation errors, to improve the
+explanation of some protocol features, and to add some new
+optional commands.
