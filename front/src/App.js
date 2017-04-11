@@ -17,6 +17,7 @@ class App extends Component {
 
     splittedValue[splittedValue.length - 1] = word
     this.setState({ value: `${splittedValue.join(' ')} ` })
+    this.predict(this.state.value)
   }
 
   handleKeyPress = async ({ keyCode, type }) => {
